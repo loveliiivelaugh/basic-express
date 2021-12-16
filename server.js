@@ -1,11 +1,17 @@
 const express = require('express')
-const app = express()
-const port = process.env.PORT || 3000
+const bodyParser = require("body-parser");
+const cors = require('cors');
+require('dotenv').config();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const app = express();
+const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+//server mmiddleware
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(cors());
+
+app.use('/', require('./routes'));
+
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
