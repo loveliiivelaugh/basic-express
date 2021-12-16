@@ -19,4 +19,8 @@ router.use('/gpt3', gpt3Routes);
 // router.use('/twitter', twitterRoutes);
 // router.use('/binance', binanceRoutes);
 
+router.use('/', (req, res) => {
+  res.send('Welcome to the API!');
+});
+
 module.exports = router;
