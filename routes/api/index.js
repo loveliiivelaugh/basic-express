@@ -7,7 +7,7 @@ const gpt3Routes = require('./gpt3Routes.js');
 // const dialogFlowRoutes = require('./dialogFlowRoutes.js');
 // const spotifyRoutes = require('./spotifyRoutes.js');
 // const twitterRoutes = require('./twitterRoutes.js');
-// const binanceRoutes = require('./binanceRoutes.js');
+const binanceRoutes = require('./binanceRoutes.js');
 
 // router.use('/photos', photosRoutes);
 router.use('/gpt3', gpt3Routes);
@@ -17,7 +17,7 @@ router.use('/gpt3', gpt3Routes);
 // router.use('/dialogFlow', dialogFlowRoutes);
 // router.use('/spotify', spotifyRoutes);
 // router.use('/twitter', twitterRoutes);
-// router.use('/binance', binanceRoutes);
+router.use('/binance', binanceRoutes);
 
 
 module.exports = router;
