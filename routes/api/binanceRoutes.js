@@ -35,9 +35,9 @@ router.get('/coinbase/account', (req, res) => {
 
 router.get('/coinbase/:asset', (req, res) => {
   const { asset } = req.params;
-  // console.log("coinbase asset", asset);
+  console.log("coinbase asset", asset);
   try {
-    // console.log("coinbasePro methods", coinbasePro);
+    console.log("coinbasePro methods", coinbasePro);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -47,7 +47,7 @@ router.get('/coinbase/:asset', (req, res) => {
 router.get('/coinbase/buys', async (req, res) => {
   try {
     const buys = [];
-    // console.log("buys", buys);
+    console.log("buys", buys);
     res.json(buys);
   } catch (error) {
     console.log(error);
