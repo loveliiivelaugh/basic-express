@@ -12,17 +12,6 @@ const kraken = new ccxt.kraken({
   secret: process.env.KRAKEN_API_SECRET
 });
 
-
-router.get('/coinbase/account', (req, res) => {
-  try {
-    coinbasePro.fetchBalance()
-      .then(balance => res.json(balance));
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 router.get('/kraken/account', (req, res) => {
   try {
     console.log("kraken methods", kraken);
@@ -34,76 +23,67 @@ router.get('/kraken/account', (req, res) => {
   }
 });
 
+router.get('/coinbase/account', (req, res) => {
+  try {
+    coinbasePro.fetchBalance()
+      .then(balance => res.json(balance));
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/coinbase/:asset', (req, res) => {
+  const { asset } = req.params;
+  // console.log("coinbase asset", asset);
+  try {
+    // console.log("coinbasePro methods", coinbasePro);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+// list all buys in coinbase
+router.get('/coinbase/buys', async (req, res) => {
+  try {
+    const buys = [];
+    // console.log("buys", buys);
+    res.json(buys);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // get history
-router.get('/history/:symbol/:interval', ({ params: { symbol, interval } }, res) => {
-  // try {
-  //   binance.candlesticks(symbol || "BNBBTC", interval || "1d", (error, ticks, symbol) => {
-  //     console.info("candlesticks()", ticks);
-  //     const data = ticks.map(tick => {
-  //       let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = tick;
-  //       return {
-  //         time,
-  //         open,
-  //         high,
-  //         low,
-  //         close,
-  //         volume,
-  //       };
-  //     });
-  //     console.info(data);
-  //     res.status(200).json({ symbol, data });
-  //   }, { limit: 100000, endTime: 1514764800000 });
-  // } catch (error) {
-  //   console.log(error);
-  // }
+router.get('/history/:symbol', async ({params: {symbol}}, res) => {
+  try {
+    const {data} = await axios.get(`https://data.alpaca.markets/v1beta1/crypto/${symbol}/bars`, {
+      params: {
+        limit: 1000,
+        timeframe: '5Min'
+      },
+      headers: {
+        'APCA-API-KEY-ID': process.env.APCA_API_KEY_ID,
+        'APCA-API-SECRET-KEY': process.env.APCA_API_SECRET_KEY
+      }
+    });
+    console.info(data);
+    res.status(200).json({ symbol, data });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// a POST route to receive webhook alerts from tradingview
+router.post('/tradingview/alerts', (req, res) => {
+  try {
+    console.log("tradingview alerts", req);
+    res.status(200).json({ message: 'success' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router;
-
-// const tick = async () => {
-//   const { asset, base, allocation, spread, tickInterval } = config;
-//   const market = `${asset}/${base}`;
-
-//   const orders = await binanceClient.fetchOpenOrders(market);
-//   orders.forEach(async order => await binanceClient.cancelOrder(order.id));
-
-//   const results = await Promise.all([
-//     // coin geck api simple price bincance
-//     axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${asset}&vs_currencies=${base}`),
-//     axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${asset}&vs_currencies=${base}`),
-//   ])
-
-//   const marketPrice = results[0].data.bitcoin.usd / results[1].data.tether.usd;
-
-//   const sellPrice = marketPrice * (1 + spread);
-//   const buyPrice = marketPrice * (1 - spread);
-//   const balances = await binanceClient.fetchBalance();
-//   const assetBalance = balances.free[asset];
-//   const baseBalance = balances.free[base];
-//   const sellBolume = assetBalance * allocation;
-//   const buyVolume = (baseBalance * allocation) / marketPrice; 
-
-//   console.log(`
-//   Something is better than nothing
-//   `)
-// };
-
-// const run = () => {
-//   const config = {
-//     asset: 'BTC',
-//     base: 'USDT',
-//     allocation: 0.1,
-//     spread: 0.2,
-//     tickInterval: 2000,
-//   };
-
-//   const binanceClient = new ccxt.binance({
-//     apiKey: config.apiKey,
-//     secret: config.secret,
-//   });
-
-//   tick(config, binanceClient);
-//   setInterval(tick, config.tickInterval, config, binanceClient);
-// };
-
-// run();
